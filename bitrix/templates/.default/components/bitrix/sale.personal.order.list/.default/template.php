@@ -37,14 +37,11 @@
             }else{
                 $('.j-basket-buttons-childs[rel="' + $(this).attr('rel') + '"]').hide();
             }
-            if ($(this).val() == 5){
-                //console.log("cber");
-                $('blockquote[rel="' + $(this).attr('rel') + '"]').css('display','block');
-
-            }else{
-                //console.log("out");
-                $('blockquote[rel="' + $(this).attr('rel') + '"]').css('display','none');
-            }
+            $('blockquote[rel="' + $(this).attr('rel') + '"]').css('display','none');
+            $('blockquote[data-payment="' + $(this).val() + '"]').css('display','block');
+        });
+        $('.form-order').click(function(val){
+            $('.basket-pay-button[data-order="' + $(this).attr('rel') + '"]').click();
         });
     });
 </script>
@@ -103,13 +100,38 @@
                                         <?php else: ?>
                                         <span><?=$arResult["INFO"]["PAY_SYSTEM"][$order["ORDER"]["PAY_SYSTEM_ID"]]["NAME"]?></span>
                                         <?php endif; ?>
-                                        <?php if ($order["ORDER"]["PAY_SYSTEM_ID"] == 5): ?>
-                                            <blockquote rel="<?= $order['ORDER']['ID'] ?>" style="font-size: 12px;">
-                                        <?php else: ?>
-                                            <blockquote rel="<?= $order['ORDER']['ID'] ?>" style="font-size: 12px;display: none">
+                                        <?php if ( ($order["ORDER"]["CANCELED"] != "Y") && ($order["ORDER"]["PAYED"] != "Y")): ?>
+                                            <?php if ($order["ORDER"]["PAY_SYSTEM_ID"] == 5): ?>
+                                                <blockquote class="blockquote-order" rel="<?= $order['ORDER']['ID'] ?>" data-payment="5" style="font-size: 12px;">
+                                                    <b>Перевод денег на карту Сбербанка</b>: Ирина Васильевна М. <strong>4276 6400 1343 7233</strong><a href="https://online.sberbank.ru" target="_blank" class="basket-pay-button" name="paymentType">Оплатить</a></blockquote>
+                                            <?php else: ?>
+                                                <blockquote class="blockquote-order" rel="<?= $order['ORDER']['ID'] ?>" data-payment="5" style="font-size: 12px;display: none;">
+                                                    <b>Перевод денег на карту Сбербанка</b>: Ирина Васильевна М. <strong>4276 6400 1343 7233</strong><a href="https://online.sberbank.ru" target="_blank" class="basket-pay-button" name="paymentType">Оплатить</a></blockquote>
+                                            <?php endif; ?>
+                                            <?php if ($order["ORDER"]["PAY_SYSTEM_ID"] == 1 || $order["ORDER"]["PAY_SYSTEM_ID"] == 10): ?>
+                                                <blockquote class="blockquote-order" rel="<?= $order['ORDER']['ID'] ?>" data-payment="1" style="font-size: 12px;">
+                                                    Оплата при получении заказа.</blockquote>
+                                            <?php else: ?>
+                                                <blockquote class="blockquote-order" rel="<?= $order['ORDER']['ID'] ?>" data-payment="1" style="font-size: 12px;display: none;">
+                                                    Оплата при получении заказа.</blockquote>
+                                            <?php endif; ?>
+
+                                            <?php if ($order["ORDER"]["PAY_SYSTEM_ID"] == 9): ?>
+                                                <blockquote class="blockquote-order" rel="<?= $order['ORDER']['ID'] ?>" data-payment="9" style="font-size: 12px;">
+                                                    <input class="basket-pay-button form-order" rel="<?= $order['ORDER']['ID'] ?>" type="submit" value="Оплатить"> Оплатить онлайн</blockquote>
+                                            <?php else: ?>
+                                                <blockquote class="blockquote-order" rel="<?= $order['ORDER']['ID'] ?>" data-payment="9" style="font-size: 12px;display: none;">
+                                                    <input class="basket-pay-button form-order" rel="<?= $order['ORDER']['ID'] ?>" type="submit" value="Оплатить"> Оплатить онлайн</blockquote>
+                                            <?php endif; ?>
+
+                                            <?php if ($order["ORDER"]["PAY_SYSTEM_ID"] == 4): ?>
+                                                <blockquote class="blockquote-order" rel="<?= $order['ORDER']['ID'] ?>" data-payment="4" style="font-size: 12px;">
+                                                    <input class="basket-pay-button form-order" type="submit" rel="<?= $order['ORDER']['ID'] ?>" value="Оплатить"> Оплатить онлайн</blockquote>
+                                            <?php else: ?>
+                                                <blockquote class="blockquote-order" rel="<?= $order['ORDER']['ID'] ?>" data-payment="4" style="font-size: 12px;display: none;">
+                                                    <input class="basket-pay-button form-order" type="submit" rel="<?= $order['ORDER']['ID'] ?>" value="Оплатить"> Оплатить онлайн</blockquote>
+                                            <?php endif; ?>
                                         <?php endif; ?>
-                                                Перевод денег на карту <a href="https://online.sberbank.ru">Сбербанка</a>: Ирина Васильевна М. <strong>4276 6400 1343 7233</strong><br/>
-                                            </blockquote>
 
                                     </td>
                                     <td>
@@ -184,7 +206,7 @@
                                             <?php else: ?>
                                                 <input class="j-paymentType-<?= $order["ORDER"]['ID']; ?>" type="hidden" name="paymentType" value="PC">
                                             <?php endif; ?>
-                                            <input class="basket-pay-button" type="submit" value="Оплатить">
+                                            <input class="basket-pay-button" type="submit" data-order="<?= $order["ORDER"]['ID']; ?>" value="Оплатить">
                                         </form>
                                     </div>
                                 <?php endif; ?>
